@@ -27,7 +27,12 @@
   },
   "homepage": "https://github.com/ryanbender2/twitch-bot#readme",
   "dependencies": {
+    "@types/imap": "^0.8.35",
+    "@types/mailparser": "^3.4.0",
     "@types/puppeteer": "^5.4.4",
+    "imap": "^0.8.19",
+    "mailparser": "^3.4.0",
+    "puppeteer": "^11.0.0",
     "ts-node": "^10.4.0",
     "winston": "^3.3.3"
   },

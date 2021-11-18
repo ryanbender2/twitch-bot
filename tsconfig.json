@@ -3,6 +3,7 @@
     /* Language and Environment */
     "target": "esnext",                                     /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
     "outDir": "dist",
+    "allowSyntheticDefaultImports": true,
 
     /* Modules */
     "module": "CommonJS",                                /* Specify what module code is generated. */

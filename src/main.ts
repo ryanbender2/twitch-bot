@@ -1,16 +1,59 @@
-import { createBrowser } from "./TwitchBot";
-import { sleep } from "./utils";
-import * as puppeteer from "puppeteer";
+import { TwitchBot } from "./TwitchBot";
+import { EmailClient } from "./Email";
+import fs from "fs";
+import winston from "winston";
 
 
+function getTwitchLoginInformation(): Map<string, string> {
+    var info: Map<string, string> = new Map<string, string>();
+    var lines = fs.readFileSync('.env', 'utf8').split('\n')
+            .map(line => line.trim())
+            .filter(line => !line.startsWith('#') && line);
+    lines.forEach(line => {
+        var parts = line.split('=').map(line => line.trim());
+        info.set(parts[0], parts[1]);
+    });
+    return info;
+}
 
 async function main(): Promise<void> {
-    var b = await createBrowser();
-    console.log(b);
-    // const browser = await createBrowser();
-    // const page = await browser.newPage();
-    // await sleep(3000);
-    // console.log(page);
+    // setup winston logging
+    const logger = winston.createLogger({
+        format: winston.format.combine(
+            winston.format.timestamp({ format: 'MM/DD/YYYY HH:mm A' }),
+            winston.format.printf(({ level, message, timestamp }) => {
+                return `[${level.toUpperCase()} ${timestamp}] ${message}`;
+            })
+        ),
+        transports: [
+            new winston.transports.Console()
+        ],
+        level: 'debug'
+    });
+
+    logger.info("Welcome to the TwitchBot!");
+
+    // get login information
+    logger.info('getting login information');
+    var twitchLogin = getTwitchLoginInformation();
+    var username = twitchLogin.get('username');
+    var password = twitchLogin.get('password');
+    var email = twitchLogin.get('email');
+    var emailPass = twitchLogin.get('email_password');
+
+    if (username === undefined || password === undefined || email === undefined || emailPass === undefined) {
+        logger.error('unable to get login information');
+        return;
+    }
+
+    var emailClient = new EmailClient(email, emailPass);
+
+    // logger.info('creating twitch bot');
+    // var bot = new TwitchBot(username, password, logger);
+    // var browser = await bot.createBrowser();
+
+    // logger.info('starting twitch bot...');
+    // await bot.start(browser);
 }
 
 main();
