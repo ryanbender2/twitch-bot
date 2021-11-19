@@ -16,9 +16,13 @@ function getTwitchLoginInformation(): Map<string, string> {
     return info;
 }
 
-async function main(): Promise<void> {
-    // setup winston logging
-    const logger = winston.createLogger({
+/**
+ * Setup logger.
+ * 
+ * @returns logger
+ */
+function getLogger(): winston.Logger {
+    return winston.createLogger({
         format: winston.format.combine(
             winston.format.timestamp({ format: 'MM/DD/YYYY HH:mm A' }),
             winston.format.printf(({ level, message, timestamp }) => {
@@ -30,6 +34,11 @@ async function main(): Promise<void> {
         ],
         level: 'debug'
     });
+}
+
+async function main(): Promise<void> {
+    // get Logger
+    const logger = getLogger();
 
     logger.info("Welcome to the TwitchBot!");
 
