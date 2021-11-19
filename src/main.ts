@@ -50,10 +50,8 @@ async function main(): Promise<void> {
     var email = twitchLogin.get('email');
     var emailPass = twitchLogin.get('email_password');
 
-    if (username === undefined || password === undefined || email === undefined || emailPass === undefined) {
-        logger.error('unable to get login information');
-        return;
-    }
+    if (username === undefined || password === undefined || email === undefined || emailPass === undefined)
+        throw new Error('unable to get login information');
 
     var emailClient = new EmailClient(email, emailPass);
 
